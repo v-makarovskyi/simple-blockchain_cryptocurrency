@@ -58,3 +58,21 @@ class Blockchain:
             previous_block = block
             block_index += 1
         return True
+
+blockchain = Blockchain()
+
+def mine_block(request):
+    if request.method == 'GET':
+        previous_block = blockchain.get_previous_block()
+        previous_nonce = previous_block['nonce']
+        nonce = blockchain.proof_of_work(previous_nonce)
+        previous_hash = blockchain.hash(previous_block)
+        block = blockchain.create_block(nonce, previous_hash)
+        response = {
+            'message': 'Поздравляем! Вы только что создали блок.',
+            'index': block['index'],
+            'timestamp': block['timestamp'],
+            'nonce': block['nonce'],
+            'previous_hash': block['previous_hash']
+        }
+    return JsonResponse(response)
